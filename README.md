@@ -98,7 +98,7 @@ verification) and `integration/nginx-pdf-service.conf`.
 ## Tests and measurements
 
 ```bash
-npm test                    # 17 tests: unit + end-to-end (real API, worker, Chromium, Redis db 15)
+npm test                    # 18 tests: unit + end-to-end (real API, worker, Chromium, Redis db 15)
 node scripts/smoke.js       # quick end-to-end against a running stack
 node scripts/smoke-bulk.js  # 100-document bulk, SSE, zip, verify
 node scripts/chaos.js       # SIGKILL Chromium mid-bulk; everything must still arrive

@@ -41,6 +41,22 @@ export async function buildServer({ logger = true } = {}) {
   const queues = getQueues();
   const base = config.publicBaseUrl;
 
+  // Django sends optional fields as null (gstin, hsn, einvoice, callback_url...).
+  // Treat null as "absent" so the schema doesn't reject B2C / non-e-invoice documents.
+  const dropNulls = (v) => {
+    if (Array.isArray(v)) return v.map(dropNulls);
+    if (v && typeof v === 'object') {
+      for (const k of Object.keys(v)) {
+        if (v[k] === null) delete v[k];
+        else v[k] = dropNulls(v[k]);
+      }
+    }
+    return v;
+  };
+  app.addHook('preValidation', async (req) => {
+    if (req.body && typeof req.body === 'object' && !Buffer.isBuffer(req.body)) dropNulls(req.body);
+  });
+
   app.addContentTypeParser('application/pdf', { parseAs: 'buffer', bodyLimit: 25 * 1024 * 1024 }, (_req, body, done) => done(null, body));
 
   // --------------------------------------------------------------- auth ---
@@ -379,6 +395,12 @@ export async function buildServer({ logger = true } = {}) {
   // ============================================================ verify ===
   // Public, no auth: anyone holding a PDF (an auditor, a customer) can check it.
   const verifyHits = new Map();
+  // Forget IPs idle for a minute, so the map can't grow without bound.
+  const sweep = setInterval(() => {
+    const cutoff = Date.now() - 60_000;
+    for (const [ip, arr] of verifyHits) if (arr[arr.length - 1] < cutoff) verifyHits.delete(ip);
+  }, 60_000);
+  sweep.unref();
   const rateLimited = (ip) => {
     const now = Date.now();
     const arr = (verifyHits.get(ip) || []).filter((t) => now - t < 60_000);

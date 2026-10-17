@@ -108,3 +108,14 @@ export const config = {
 
   templateVersion: '2026.10.1',
 };
+
+// Outside demo mode, refuse to start with the built-in development secrets:
+// anyone reading this repo could forge download links and webhooks.
+if (!config.demoMode) {
+  const insecure = [
+    ['DOWNLOAD_TOKEN_SECRET', config.auth.downloadTokenSecret === 'dev-only-change-me'],
+    ['WEBHOOK_SECRET', config.auth.webhookSecret === 'dev-webhook-secret'],
+    ['API_KEYS', config.auth.apiKeys.some(({ key }) => key === 'demo-key')],
+  ].filter(([, bad]) => bad).map(([name]) => name);
+  if (insecure.length) throw new Error(`DEMO_MODE=false but ${insecure.join(', ')} still use development defaults; set them in the environment.`);
+}

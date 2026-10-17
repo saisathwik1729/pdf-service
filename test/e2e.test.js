@@ -102,6 +102,22 @@ test('bad tokens and bad totals are refused', async (t) => {
   assert.equal(noKey.status, 401);
 });
 
+test('null optional fields (as Django sends them) are accepted, single and bulk', async (t) => {
+  if (skip) return t.skip('no redis');
+  // B2C invoice without e-invoice IRN: exactly what snapshots.py produces.
+  const mk = (seed) => {
+    const d = makeInvoice({ rows: 3, seed });
+    d.data = { ...d.data, buyer: { ...d.data.buyer, gstin: null, phone: null }, einvoice: null, po_reference: null, notes: null };
+    d.data.items = d.data.items.map((it, i) => (i === 0 ? { ...it, hsn: null, item_code: null } : it));
+    return d;
+  };
+  const r = await post('/v1/documents', mk(110));
+  assert.equal(r.status, 200);
+  assert.equal((await r.json()).status, 'done');
+  const b = await post('/v1/bulk', { label: 'nulls', callback_url: null, documents: [mk(111), mk(112)] });
+  assert.equal(b.status, 202);
+});
+
 test('a 1,000-line purchase order is chunked and still numbered correctly', async (t) => {
   if (skip) return t.skip('no redis');
   const j = await (await post('/v1/documents?wait=25000', makePurchaseOrder({ rows: 1000, seed: 105 }))).json();
