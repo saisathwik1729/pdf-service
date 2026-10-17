@@ -1,0 +1,54 @@
+# Local / single-box deployment: API + worker + a Redis that belongs to this
+# service only.   docker compose up --build   ->   http://localhost:8080
+services:
+  redis:
+    image: redis:7-alpine
+    # noeviction: queue keys must never be evicted (the ERP's cache Redis uses LRU,
+    # which is exactly why we don't share it). AOF so queued work survives restarts.
+    command: ["redis-server", "--maxmemory", "256mb", "--maxmemory-policy", "noeviction", "--appendonly", "yes", "--appendfsync", "everysec"]
+    volumes: [redis-data:/data]
+    healthcheck: { test: ["CMD", "redis-cli", "ping"], interval: 5s, timeout: 2s, retries: 10 }
+    # Burst workers on other instances connect here (docs/deployment.md):
+    # ports: ["6379:6379"]  + "--requirepass", "${REDIS_PASSWORD}", security group limited to the burst ASG
+    restart: unless-stopped
+
+  api:
+    build: .
+    command: ["node", "src/api/server.js"]
+    env_file: [{ path: .env, required: false }]
+    environment:
+      REDIS_URL: redis://redis:6379/0
+    ports: ["8080:8080"]
+    volumes: [pdf-data:/app/data]
+    depends_on: { redis: { condition: service_healthy } }
+    read_only: true
+    tmpfs: [/tmp]
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    mem_limit: 512m
+    restart: unless-stopped
+
+  worker:
+    build: .
+    command: ["node", "src/queue/worker.js"]
+    env_file: [{ path: .env, required: false }]
+    environment:
+      REDIS_URL: redis://redis:6379/0
+    volumes: [pdf-data:/app/data]
+    depends_on: { redis: { condition: service_healthy } }
+    # (Not read_only: Chromium writes profile/crash dirs under $HOME. Tighten
+    #  with a tmpfs HOME once verified in the target environment.)
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    # Hard ceiling. Chromium + pool measured at ~0.5GB for 2 slots (docs/benchmarks.md);
+    # if a render still runs away, the kernel kills only this container,
+    # BullMQ re-queues its jobs, and the restart policy brings it back.
+    mem_limit: 2g
+    shm_size: 256m
+    stop_grace_period: 60s # let in-flight renders finish on deploy
+    restart: unless-stopped
+    # deploy: { replicas: 2 }   # scale workers horizontally; they coordinate via Redis
+
+volumes:
+  redis-data:
+  pdf-data:

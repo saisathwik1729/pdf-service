@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Document desk</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;700;800&family=Spline+Sans+Mono:wght@400&display=swap" rel="stylesheet">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 16 22%22%3E%3Crect x=%221%22 y=%221%22 width=%2214%22 height=%2220%22 fill=%22%23fcfdfd%22 stroke=%22%234b4db0%22 stroke-width=%222%22/%3E%3Cpath d=%22M4 7h8M4 11h8M4 15h5%22 stroke=%22%234b4db0%22 stroke-width=%221.5%22/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="top">
+    <div class="brand">
+      <h1>Document desk</h1>
+      <p>Purchase orders and GST invoices, rendered by the PDF service</p>
+    </div>
+    <dl class="ops" aria-live="off" aria-label="Service status">
+      <div><dt><span class="live" id="live"></span>In queue</dt><dd id="s-queue">–</dd></div>
+      <div><dt>Printed last minute</dt><dd id="s-rate">–</dd></div>
+      <div><dt>Typical render</dt><dd id="s-p50">–</dd></div>
+      <div><dt>Chromium memory</dt><dd id="s-mem">–</dd></div>
+      <div><dt>Browser restarts</dt><dd id="s-crash">–</dd></div>
+    </dl>
+  </header>
+
+  <main>
+    <!-- ======================================== single document -->
+    <section class="sheet" aria-labelledby="single-h">
+      <h2 id="single-h">One document</h2>
+      <p class="lede">What a user gets when they click "Download PDF" in the ERP. The budget is 5 seconds to the first byte.</p>
+
+      <div class="presets" role="group" aria-label="Sample document">
+        <button class="preset" data-preset="inv" aria-pressed="true">GST invoice <span>9 lines, intra-state</span></button>
+        <button class="preset" data-preset="inv-inter">GST invoice <span>14 lines, inter-state</span></button>
+        <button class="preset" data-preset="po">Purchase order <span>60 lines</span></button>
+        <button class="preset" data-preset="po-heavy">Purchase order <span>1,200 lines, chunked</span></button>
+      </div>
+
+      <div class="row">
+        <button class="btn" id="gen">Generate PDF</button>
+        <button class="btn quiet" id="again" disabled title="Send exactly the same data again">Same data again</button>
+        <label class="check"><input type="checkbox" id="break"> Break the totals</label>
+      </div>
+      <details class="json"><summary>Edit the payload the ERP sends</summary><textarea id="payload" spellcheck="false" aria-label="Document JSON"></textarea></details>
+
+      <div id="single-out"><p class="empty">Pick a sample and generate it. Try the 1,200-line order: it is printed in chunks so memory stays flat.</p></div>
+    </section>
+
+    <!-- ======================================== bulk -->
+    <section class="sheet" aria-labelledby="bulk-h">
+      <h2 id="bulk-h">Bulk run</h2>
+      <p class="lede">Up to 100 documents in one request. Each slip below is one PDF; click a finished slip to open it.</p>
+
+      <div class="bulk-controls">
+        <label class="field">Documents <output id="n-out">40</output>
+          <input type="range" id="n" min="1" max="100" value="40">
+        </label>
+        <label class="field">Batch name
+          <input type="text" id="label" value="October dispatch" maxlength="60">
+        </label>
+        <button class="btn" id="bulk-go">Start bulk run</button>
+        <label class="check"><input type="checkbox" id="heavy" checked> Every tenth one is an 800-line order</label>
+      </div>
+
+      <p class="snapshot-note" id="snapshot-note">Every PDF in a batch is printed from the data as it was when the batch started, and says so in its footer.</p>
+      <div class="tray" id="tray" aria-label="Documents in this batch"><p class="empty" style="grid-column:1/-1;padding:16px 4px">Nothing printing yet.</p></div>
+      <div class="legend" aria-hidden="true">
+        <span><i></i>Waiting</span><span><i class="l-r"></i>Printing</span><span><i class="l-d"></i>Ready</span><span><i class="l-t"></i>Retrying</span><span><i class="l-f"></i>Failed</span><span><i class="l-h"></i>Folded corner: large order, printed in chunks</span>
+      </div>
+      <div class="progress-line" id="progress" aria-live="polite"></div>
+      <div class="bar"><div id="bar"></div></div>
+
+      <div class="downloads" id="downloads" hidden>
+        <h3>Download</h3>
+        <p>Large batches are split into zip parts of up to 25 MB. Downloads resume from the last byte received if the connection drops, and each part is checked against its SHA-256 before it is saved.</p>
+        <label class="check"><input type="checkbox" id="flaky"> Simulate an unreliable connection (drops about a third of requests)</label>
+        <div id="parts"></div>
+        <details class="files"><summary id="files-sum">Individual files</summary><ol id="files"></ol></details>
+      </div>
+    </section>
+
+    <!-- ======================================== below -->
+    <div class="below span-2">
+      <section class="sheet" aria-labelledby="verify-h">
+        <h2 id="verify-h">Check a PDF</h2>
+        <p class="lede">Compliance can prove a file is exactly what was generated. Any change, even one byte, fails the check.</p>
+        <label class="drop" id="drop">
+          <input type="file" id="file" accept="application/pdf">
+          Drop a PDF here, or click to choose one
+        </label>
+        <div class="row" style="margin-top:10px">
+          <button class="btn quiet" id="try-ok" disabled>Check the last PDF</button>
+          <button class="btn quiet" id="try-bad" disabled>Check a copy with one byte changed</button>
+        </div>
+        <div id="verdict"></div>
+      </section>
+
+      <section class="sheet" aria-labelledby="log-h">
+        <h2 id="log-h">Recent renders</h2>
+        <p class="lede">From the worker's own log. Large orders show as chunked; retries after a browser crash show the attempt.</p>
+        <div class="scroll"><table class="log"><thead><tr><th>Time</th><th>Kind</th><th class="n">Lines</th><th class="n">Pages</th><th class="n">Size</th><th class="n">Took</th><th></th></tr></thead><tbody id="log"></tbody></table></div>
+      </section>
+    </div>
+  </main>
+  <footer>Signing key <span id="key-id" class="hash">…</span>. Public verification page: <a href="verify">verify</a>. Metrics: <a href="metrics">metrics</a>.</footer>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>

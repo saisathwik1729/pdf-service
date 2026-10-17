@@ -1,0 +1,107 @@
+{
+  "machine": {
+    "cpus": 2,
+    "model": "Intel(R) Xeon(R) Processor @ 2.10GHz",
+    "note": "load generator, API, worker, Chromium and Redis all share this machine"
+  },
+  "profile": {
+    "singlesPerMin": 1000,
+    "durationSec": 60,
+    "bulkPerMin": 10,
+    "bulkSize": 100,
+    "bulkTenants": 5
+  },
+  "singles": {
+    "sent": 1000,
+    "done": 1000,
+    "rejected429": 0,
+    "errors": 0,
+    "within5sPct": 100,
+    "answeredInline200Pct": 100,
+    "readyMs": {
+      "p50": 177,
+      "p95": 497,
+      "p99": 581,
+      "max": 654
+    }
+  },
+  "bulks": [
+    {
+      "status": "done",
+      "done": 100,
+      "failed": 0,
+      "totalSec": 17.3,
+      "parts": 1
+    },
+    {
+      "status": "done",
+      "done": 100,
+      "failed": 0,
+      "totalSec": 26.5,
+      "parts": 1
+    },
+    {
+      "status": "done",
+      "done": 100,
+      "failed": 0,
+      "totalSec": 31.4,
+      "parts": 1
+    },
+    {
+      "status": "done",
+      "done": 100,
+      "failed": 0,
+      "totalSec": 37.5,
+      "parts": 1
+    },
+    {
+      "status": "done",
+      "done": 100,
+      "failed": 0,
+      "totalSec": 41.4,
+      "parts": 1
+    },
+    {
+      "status": "done",
+      "done": 100,
+      "failed": 0,
+      "totalSec": 43.6,
+      "parts": 1
+    },
+    {
+      "status": "done",
+      "done": 100,
+      "failed": 0,
+      "totalSec": 45.4,
+      "parts": 1
+    },
+    {
+      "status": "done",
+      "done": 100,
+      "failed": 0,
+      "totalSec": 48.5,
+      "parts": 1
+    },
+    {
+      "status": "done",
+      "done": 100,
+      "failed": 0,
+      "totalSec": 49.5,
+      "parts": 1
+    },
+    {
+      "status": "done",
+      "done": 100,
+      "failed": 0,
+      "totalSec": 51.5,
+      "parts": 1
+    }
+  ],
+  "peaks": {
+    "interactiveQueue": 6,
+    "bulkQueue": 585,
+    "chromiumMemMb": 472,
+    "crashes": 0
+  },
+  "wallSec": 105.5
+}

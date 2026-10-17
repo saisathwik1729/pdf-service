@@ -1,0 +1,32 @@
+<table class="items">
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>Item &amp; description</th>
+      <th>HSN/SAC</th>
+      {{#if (eq type "purchase_order")}}<th>Deliver by</th>{{/if}}
+      <th class="num">Qty</th>
+      <th class="num">Rate</th>
+      <th class="num">Disc.</th>
+      <th class="num">Taxable</th>
+      <th class="num">GST</th>
+      <th class="num">Amount</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#each chunk.rows}}
+    <tr>
+      <td class="idx">{{add ../chunk.from @index}}</td>
+      <td class="desc">{{description}}{{#if item_code}}<div class="sub">{{item_code}}</div>{{/if}}</td>
+      <td>{{hsn}}</td>
+      {{#if (eq ../type "purchase_order")}}<td class="nowrap">{{date delivery_date}}</td>{{/if}}
+      <td class="num">{{qty qty}} {{unit}}</td>
+      <td class="num">{{money rate}}</td>
+      <td class="num">{{#if discount_pct}}{{pct discount_pct}}{{else}}–{{/if}}</td>
+      <td class="num">{{money taxable_value}}</td>
+      <td class="num">{{pct tax_rate}}</td>
+      <td class="num">{{money total}}</td>
+    </tr>
+    {{/each}}
+  </tbody>
+</table>

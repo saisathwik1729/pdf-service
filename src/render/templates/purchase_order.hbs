@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><title>Purchase Order {{number}} [ref {{ctx.docKey}}]</title><style>{{{css}}}</style></head>
+<body>
+{{#if chunk.isFirst}}
+<header class="doc-head">
+  <div class="brand">
+    <div class="logo">{{initials buyer.name}}</div>
+    <div>
+      <h1>{{buyer.name}}</h1>
+      <p>{{lines buyer.address}}</p>
+      <p>GSTIN <b>{{buyer.gstin}}</b>{{#if buyer.state}} · {{buyer.state}}{{#if buyer.state_code}} ({{buyer.state_code}}){{/if}}{{/if}}</p>
+      {{#if buyer.phone}}<p>{{buyer.phone}}{{#if buyer.email}} · {{buyer.email}}{{/if}}</p>{{/if}}
+    </div>
+  </div>
+  <div class="doc-title">
+    <h2>PURCHASE ORDER</h2>
+    <div class="copy">Vendor copy</div>
+    <table class="meta">
+      <tr><td>PO no.</td><td><b>{{number}}</b></td></tr>
+      <tr><td>PO date</td><td>{{date date}}</td></tr>
+      {{#if expected_delivery}}<tr><td>Expected delivery</td><td>{{date expected_delivery}}</td></tr>{{/if}}
+      {{#if quotation_ref}}<tr><td>Quotation ref.</td><td>{{quotation_ref}}</td></tr>{{/if}}
+      {{#if payment_terms}}<tr><td>Payment terms</td><td>{{payment_terms}}</td></tr>{{/if}}
+    </table>
+  </div>
+</header>
+<section class="parties">
+  <div class="party"><h3>Vendor</h3>
+    <div class="name">{{vendor.name}}</div><div>{{lines vendor.address}}</div>
+    {{#if vendor.gstin}}<div>GSTIN <b>{{vendor.gstin}}</b></div>{{/if}}
+    {{#if vendor.contact}}<div class="muted">{{vendor.contact}}</div>{{/if}}
+  </div>
+  <div class="party"><h3>Deliver to</h3>
+    {{#if ship_to}}<div class="name">{{ship_to.name}}</div><div>{{lines ship_to.address}}</div>{{else}}<div class="muted">Same as company address</div>{{/if}}
+  </div>
+  <div class="party"><h3>Order</h3>
+    <div>{{#if intra}}Intra-state · CGST + SGST{{else}}Inter-state · IGST{{/if}}</div>
+    <div class="muted">{{chunk.total}} line item{{#if (gt chunk.total 1)}}s{{/if}}</div>
+    {{#if delivery_terms}}<div class="muted">Delivery: {{delivery_terms}}</div>{{/if}}
+  </div>
+</section>
+{{else}}
+<div class="cont-head"><span><b>Purchase Order {{number}}</b> · {{buyer.name}}</span><span class="muted">continued · items {{chunk.from}}–{{chunk.to}} of {{chunk.total}}</span></div>
+{{/if}}
+
+{{> items}}
+
+{{#if chunk.isLast}}
+<section class="summary">
+  <div>
+    <table class="tax">
+      <thead><tr><th>GST rate</th><th>Taxable</th>{{#if intra}}<th>CGST</th><th>SGST</th>{{else}}<th>IGST</th>{{/if}}<th>Total tax</th></tr></thead>
+      <tbody>
+      {{#each taxSummary}}
+        <tr><td>{{pct rate}}</td><td>{{money taxable}}</td>{{#if ../intra}}<td>{{money cgst}}</td><td>{{money sgst}}</td>{{else}}<td>{{money igst}}</td>{{/if}}<td>{{money tax}}</td></tr>
+      {{/each}}
+      </tbody>
+    </table>
+    <div class="words">{{words totals.grand_total}}</div>
+  </div>
+  <div>
+    <table class="totals">
+      <tr><td>Taxable value</td><td>₹ {{money totals.taxable}}</td></tr>
+      {{#if intra}}
+      <tr><td>CGST</td><td>₹ {{money totals.cgst}}</td></tr>
+      <tr><td>SGST</td><td>₹ {{money totals.sgst}}</td></tr>
+      {{else}}
+      <tr><td>IGST</td><td>₹ {{money totals.igst}}</td></tr>
+      {{/if}}
+      {{#if totals.round_off}}<tr><td>Round off</td><td>₹ {{money totals.round_off}}</td></tr>{{/if}}
+      <tr class="grand"><td>PO total</td><td>₹ {{money totals.grand_total}}</td></tr>
+    </table>
+  </div>
+</section>
+{{#if notes}}<div class="block"><h3>Notes</h3><div>{{lines notes}}</div></div>{{/if}}
+{{#if terms}}<div class="block"><h3>Terms &amp; conditions</h3><div class="small muted">{{lines terms}}</div></div>{{/if}}
+<section class="foot">
+  <div class="verify">
+    {{#if qr}}{{qr}}{{/if}}
+    <div class="small muted">Scan or visit the link to verify this document has not been altered since it was generated.<br><span class="badge">Tamper-evident</span></div>
+  </div>
+  <div></div>
+  <div class="sign">For <b>{{buyer.name}}</b>{{#if approved_by}}<br><span class="small muted">Approved by {{approved_by}}</span>{{/if}}<br><span class="line">Authorised signatory</span></div>
+</section>
+{{/if}}
+</body>
+</html>

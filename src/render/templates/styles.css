@@ -1,0 +1,73 @@
+/* Print stylesheet shared by all ERP documents.
+   Rules of thumb that matter for big documents:
+   - no box-shadow / filter / gradients: they force rasterisation and blow up memory
+   - plain <table> with <thead> as table-header-group: Chromium repeats it per page
+   - fonts come from the OS image (no network, no base64 in every render) */
+@page { size: A4; margin: 11mm 11mm 15mm 11mm; }
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  font-family: "Noto Sans", "DejaVu Sans", sans-serif;
+  font-size: 8.6pt;
+  color: #1b1f24;
+  line-height: 1.35;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+:root { --ink: #1b1f24; --muted: #5d6673; --rule: #d9dee5; --accent: #0f5d5e; --tint: #eef5f5; }
+h1, h2, h3, p { margin: 0; }
+.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.muted { color: var(--muted); }
+.small { font-size: 7.4pt; }
+
+.doc-head { display: flex; justify-content: space-between; gap: 18px; padding-bottom: 10px; border-bottom: 2px solid var(--accent); }
+.brand { display: flex; gap: 10px; max-width: 58%; }
+.logo { width: 38px; height: 38px; border-radius: 8px; background: var(--accent); color: #fff; font-weight: 700;
+  font-size: 13pt; display: flex; align-items: center; justify-content: center; flex: none; }
+.brand h1 { font-size: 13pt; letter-spacing: -0.01em; margin-bottom: 2px; }
+.brand p { color: var(--muted); }
+.doc-title { text-align: right; }
+.doc-title h2 { font-size: 15pt; letter-spacing: 0.06em; color: var(--accent); }
+.copy { font-size: 7pt; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin: 2px 0 6px; }
+table.meta { border-collapse: collapse; margin-left: auto; }
+table.meta td { padding: 1px 0 1px 12px; text-align: right; }
+table.meta td:first-child { color: var(--muted); }
+
+.parties { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin: 10px 0; }
+.party { border: 1px solid var(--rule); border-radius: 6px; padding: 7px 9px; }
+.party h3 { font-size: 6.8pt; text-transform: uppercase; letter-spacing: 0.08em; color: var(--accent); margin-bottom: 3px; }
+.party .name { font-weight: 600; }
+
+.cont-head { display: flex; justify-content: space-between; border-bottom: 1px solid var(--rule); padding-bottom: 6px; margin-bottom: 6px; }
+.cont-head b { color: var(--accent); }
+
+table.items { width: 100%; border-collapse: collapse; }
+table.items thead { display: table-header-group; }
+table.items th { background: var(--tint); color: var(--accent); font-size: 6.9pt; text-transform: uppercase; letter-spacing: 0.04em;
+  text-align: left; padding: 5px 5px; border-bottom: 1px solid var(--accent); }
+table.items th.num { text-align: right; }
+table.items td { padding: 4px 5px; border-bottom: 1px solid var(--rule); vertical-align: top; }
+table.items tr { page-break-inside: avoid; break-inside: avoid; }
+table.items td.desc { width: 32%; }
+table.items td.desc .sub { color: var(--muted); font-size: 7.2pt; }
+table.items td.idx { color: var(--muted); width: 22px; }
+
+.summary { display: grid; grid-template-columns: 1.35fr 1fr; gap: 14px; margin-top: 10px; break-inside: avoid; page-break-inside: avoid; }
+table.tax { width: 100%; border-collapse: collapse; }
+table.tax th { font-size: 6.8pt; text-transform: uppercase; color: var(--muted); text-align: right; padding: 3px 4px; border-bottom: 1px solid var(--rule); }
+table.tax th:first-child, table.tax td:first-child { text-align: left; }
+table.tax td { padding: 3px 4px; text-align: right; font-variant-numeric: tabular-nums; border-bottom: 1px dotted var(--rule); }
+table.totals { width: 100%; border-collapse: collapse; }
+table.totals td { padding: 3px 0; }
+table.totals td:last-child { text-align: right; font-variant-numeric: tabular-nums; }
+table.totals tr.grand td { border-top: 2px solid var(--accent); padding-top: 6px; font-size: 11pt; font-weight: 700; color: var(--accent); }
+.words { margin-top: 6px; padding: 6px 8px; background: var(--tint); border-radius: 5px; font-weight: 500; }
+.block { margin-top: 10px; }
+.block h3 { font-size: 6.8pt; text-transform: uppercase; letter-spacing: 0.08em; color: var(--accent); margin-bottom: 3px; }
+.foot { display: grid; grid-template-columns: 1fr auto 1fr; gap: 14px; align-items: end; margin-top: 14px; break-inside: avoid; page-break-inside: avoid; }
+.verify { display: flex; gap: 8px; align-items: center; }
+.verify svg { width: 62px; height: 62px; }
+.sign { text-align: right; }
+.sign .line { margin-top: 34px; border-top: 1px solid var(--ink); display: inline-block; min-width: 170px; padding-top: 3px; }
+.badge { display: inline-block; font-size: 6.6pt; padding: 1px 6px; border-radius: 99px; border: 1px solid var(--accent); color: var(--accent); }
+.nowrap { white-space: nowrap; }

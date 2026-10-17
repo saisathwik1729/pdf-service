@@ -1,0 +1,39 @@
+{
+  "name": "erp-pdf-service",
+  "version": "1.0.0",
+  "description": "PDF generation microservice for ERP (single + bulk, Puppeteer)",
+  "main": "src/api/server.js",
+  "scripts": {
+    "api": "node src/api/server.js",
+    "worker": "node src/queue/worker.js",
+    "dev": "node scripts/dev.js",
+    "bench": "node scripts/bench.js",
+    "loadtest": "node scripts/loadtest.js",
+    "test": "node --test test/unit.test.js test/e2e.test.js",
+    "test:unit": "node --test test/unit.test.js",
+    "chaos": "node scripts/chaos.js",
+    "smoke": "node scripts/smoke.js && node scripts/smoke-bulk.js",
+    "diagram": "node scripts/render-diagram.js"
+  },
+  "author": "Konjerla Sai Sathwik",
+  "license": "UNLICENSED",
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.1152.0",
+    "@aws-sdk/s3-request-presigner": "^3.1152.0",
+    "@fastify/static": "^10.1.6",
+    "archiver": "^8.0.0",
+    "bullmq": "^6.3.15",
+    "fastify": "^5.12.7",
+    "handlebars": "^4.7.10",
+    "ioredis": "^6.0.0",
+    "pdf-lib": "^1.17.1",
+    "pino": "^10.4.0",
+    "pino-pretty": "^13.2.0",
+    "puppeteer": "^25.14.0",
+    "qrcode": "^1.5.4"
+  },
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  }
+}

@@ -1,0 +1,143 @@
+{
+  "type": "purchase_order",
+  "document_id": "po_5",
+  "version": "2026-10-16T05:12:00Z",
+  "data": {
+    "number": "PO/26-27/04405",
+    "date": "2026-10-16",
+    "expected_delivery": "2026-11-20",
+    "quotation_ref": "Q-8805",
+    "payment_terms": "50% advance, balance on delivery",
+    "delivery_terms": "FOR destination",
+    "supply_type": "intra",
+    "buyer": {
+      "name": "Narmada Industrial Supplies Pvt Ltd",
+      "address": "Plot 42, Sector F, Sanwer Road Industrial Area\nIndore, Madhya Pradesh 452015",
+      "gstin": "23AABCN1234F1Z5",
+      "state": "Madhya Pradesh",
+      "state_code": "23",
+      "phone": "+91 731 400 1234",
+      "email": "accounts@narmadasupplies.example"
+    },
+    "vendor": {
+      "name": "Shree Ganesh Engineering Works",
+      "address": "17 Pologround Industrial Estate\nIndore, MP 452015",
+      "gstin": "23AAKFS9876M1Z2",
+      "state": "Madhya Pradesh",
+      "state_code": "23",
+      "contact": "Procurement desk · +91 98260 00000"
+    },
+    "ship_to": {
+      "name": "Narmada Industrial Supplies — Warehouse 2",
+      "address": "Khasra 221, Dewas Naka\nIndore, MP 452010"
+    },
+    "items": [
+      {
+        "description": "Hydraulic Hose 1/2\" (per m)",
+        "item_code": "SKU-4009-0001",
+        "hsn": "4009",
+        "qty": 87,
+        "unit": "m",
+        "rate": 343.98,
+        "discount_pct": 7.5,
+        "taxable_value": 27681.79,
+        "tax_rate": 18,
+        "cgst": 2491.36,
+        "sgst": 2491.36,
+        "igst": 0,
+        "total": 32664.51,
+        "delivery_date": "2026-11-02"
+      },
+      {
+        "description": "V-Belt B-42",
+        "item_code": "SKU-4010-0002",
+        "hsn": "4010",
+        "qty": 54,
+        "unit": "pcs",
+        "rate": 316.28,
+        "discount_pct": 0,
+        "taxable_value": 17079.12,
+        "tax_rate": 18,
+        "cgst": 1537.12,
+        "sgst": 1537.12,
+        "igst": 0,
+        "total": 20153.36,
+        "delivery_date": "2026-11-02"
+      },
+      {
+        "description": "Safety Shoes",
+        "item_code": "SKU-6403-0003",
+        "hsn": "6403",
+        "qty": 88,
+        "unit": "pair",
+        "rate": 1050.58,
+        "discount_pct": 0,
+        "taxable_value": 92451.04,
+        "tax_rate": 5,
+        "cgst": 2311.28,
+        "sgst": 2311.27,
+        "igst": 0,
+        "total": 97073.59,
+        "delivery_date": "2026-11-10"
+      },
+      {
+        "description": "Copper Wire 2.5 sq mm",
+        "item_code": "SKU-8544-0004",
+        "hsn": "8544",
+        "qty": 107,
+        "unit": "m",
+        "rate": 31.39,
+        "discount_pct": 0,
+        "taxable_value": 3358.73,
+        "tax_rate": 18,
+        "cgst": 302.29,
+        "sgst": 302.28,
+        "igst": 0,
+        "total": 3963.3,
+        "delivery_date": "2026-12-02"
+      },
+      {
+        "description": "Galvanised Pipe 1\"",
+        "item_code": "SKU-7306-0005",
+        "hsn": "7306",
+        "qty": 104,
+        "unit": "m",
+        "rate": 208.03,
+        "discount_pct": 0,
+        "taxable_value": 21635.12,
+        "tax_rate": 18,
+        "cgst": 1947.16,
+        "sgst": 1947.16,
+        "igst": 0,
+        "total": 25529.44,
+        "delivery_date": "2026-11-03"
+      },
+      {
+        "description": "Safety Shoes",
+        "item_code": "SKU-6403-0006",
+        "hsn": "6403",
+        "qty": 91,
+        "unit": "pair",
+        "rate": 1100.41,
+        "discount_pct": 0,
+        "taxable_value": 100137.31,
+        "tax_rate": 5,
+        "cgst": 2503.44,
+        "sgst": 2503.43,
+        "igst": 0,
+        "total": 105144.18,
+        "delivery_date": "2026-11-27"
+      }
+    ],
+    "totals": {
+      "taxable": 262343.11,
+      "cgst": 11092.65,
+      "sgst": 11092.62,
+      "igst": 0,
+      "round_off": -0.38,
+      "grand_total": 284528
+    },
+    "approved_by": "R. Sharma (Purchase Head)",
+    "terms": "1. Quote PO number on all invoices and delivery challans.\n2. Material subject to inspection at our stores.\n3. Test certificates required for all steel items."
+  }
+}

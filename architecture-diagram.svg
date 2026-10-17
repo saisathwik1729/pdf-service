@@ -1,0 +1,210 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1700 1200" width="1700" height="1200" font-family="Noto Sans, Arial, sans-serif">
+  <defs>
+    <marker id="a-ink" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#1d2b3a"/></marker>
+    <marker id="a-vio" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#4b4db0"/></marker>
+    <marker id="a-teal" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0f766e"/></marker>
+    <marker id="a-grn" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#b4232c"/></marker>
+    <style>
+      .box { fill: #fcfdfd; stroke: #8592a0; stroke-width: 1.2; }
+      .grp { fill: none; stroke: #8592a0; stroke-width: 1.2; stroke-dasharray: 6 5; }
+      .vpc { fill: #eef2f5; stroke: #566474; stroke-width: 1.2; stroke-dasharray: 2 4; }
+      .t { font-size: 17px; font-weight: 700; fill: #1d2b3a; }
+      .s { font-size: 13px; fill: #566474; }
+      .b { font-size: 13px; fill: #1d2b3a; }
+      .g { font-size: 13px; font-weight: 600; fill: #566474; }
+      .chip { fill: #e4e4f6; stroke: #4b4db0; stroke-width: 1; }
+      .chipt { font-size: 12px; fill: #383a8f; }
+      .lbl { font-size: 12.5px; font-weight: 600; }
+      .vio { stroke: #4b4db0; stroke-width: 2.2; fill: none; }
+      .teal { stroke: #0f766e; stroke-width: 2.2; fill: none; }
+      .ink { stroke: #1d2b3a; stroke-width: 2.2; fill: none; }
+      .red { stroke: #b4232c; stroke-width: 2.2; fill: none; stroke-dasharray: 7 4; }
+      .bg { fill: #fcfdfd; }
+    </style>
+  </defs>
+
+  <rect width="1700" height="1200" fill="#e4e8ec"/>
+  <text x="40" y="52" font-size="26" font-weight="700" fill="#1d2b3a">PDF generation service for the ERP: architecture</text>
+  <text x="40" y="78" class="s" font-size="15">Single and bulk generation, archive, tamper evidence. Brief: 30k PDFs/month, peaks of 1,000 singles/min + 5–10 bulk/min, 2–3 s and 400 MB per PDF, ₹12,500/month.</text>
+
+  <!-- ===================== VPC -->
+  <rect x="320" y="100" width="1000" height="885" rx="10" class="vpc"/>
+  <text x="340" y="922" class="g">VPC, ap-south-1 (Mumbai), same AZ. Inbound to the</text><text x="340" y="939" class="g">PDF box only from the ERP's security group. No ALB,</text><text x="340" y="956" class="g">no NAT gateway (~$40/mo): outbound via its own IPv4,</text><text x="340" y="973" class="g">S3 via the free gateway endpoint.</text>
+
+  <!-- ===================== Users -->
+  <rect x="40" y="120" width="240" height="210" rx="6" class="box"/>
+  <text x="58" y="150" class="t">Users' browsers</text>
+  <text x="58" y="172" class="s">SMB staff, often on</text>
+  <text x="58" y="189" class="s">unreliable connections</text>
+  <text x="58" y="222" class="b">• one PDF: link → download</text>
+  <text x="58" y="242" class="b">• bulk: live progress (SSE),</text>
+  <text x="58" y="260" class="b">  zip parts ≤ 25 MB, resumed</text>
+  <text x="58" y="278" class="b">  by HTTP Range, SHA-256</text>
+  <text x="58" y="296" class="b">  checked before saving</text>
+
+  <rect x="40" y="860" width="240" height="90" rx="6" class="box"/>
+  <text x="58" y="890" class="t">Auditor / customer</text>
+  <text x="58" y="912" class="s">holds a PDF and needs proof</text>
+  <text x="58" y="930" class="s">it was not modified</text>
+
+  <!-- ===================== ERP group -->
+  <rect x="350" y="130" width="380" height="510" rx="8" class="grp"/>
+  <text x="366" y="625" class="g">Existing ERP. No re-architecture, only 3 new endpoints.</text>
+
+  <rect x="380" y="150" width="320" height="64" rx="6" class="box"/>
+  <text x="396" y="176" class="t">nginx (TLS)</text>
+  <text x="396" y="198" class="s">new route /pdf/ → PDF service (private IP)</text>
+
+  <rect x="380" y="250" width="320" height="140" rx="6" class="box"/>
+  <text x="396" y="276" class="t">Django monolith (gunicorn)</text>
+  <text x="396" y="296" class="s">EC2 r6i.large, 2 vCPU, 16 GB</text>
+  <text x="396" y="322" class="b">• builds JSON payloads from ERP data</text>
+  <text x="396" y="342" class="b">• gets a link back in ~20 ms; never</text>
+  <text x="396" y="360" class="b">  holds a worker while a PDF renders</text>
+  <text x="396" y="378" class="b">• verifies HMAC webhooks</text>
+
+  <rect x="380" y="440" width="320" height="70" rx="6" class="box"/>
+  <text x="396" y="466" class="t">PostgreSQL (RDS)</text>
+  <text x="396" y="488" class="s">bulk snapshot: one REPEATABLE READ txn</text>
+
+  <rect x="380" y="540" width="320" height="64" rx="6" class="box"/>
+  <text x="396" y="566" class="t">ERP Redis (cache)</text>
+  <text x="396" y="588" class="s">not reused: LRU eviction would drop queue keys</text>
+
+
+  <!-- ===================== burst tier -->
+  <rect x="350" y="658" width="380" height="234" rx="8" fill="#e4e4f6" stroke="#4b4db0" stroke-width="1.2" stroke-dasharray="6 4"/>
+  <text x="368" y="686" class="t">Burst workers (Auto Scaling group)</text>
+  <text x="368" y="706" class="s">spot c7i.2xlarge × 0–10, same image, worker role only</text>
+  <text x="368" y="734" class="b">• 8 render slots each: min(vCPU, RAM ÷ 400 MB)</text>
+  <text x="368" y="754" class="b">• scale out when estimated queue wait &gt; 2 s</text>
+  <text x="368" y="772" class="b">  (pdfsvc_estimated_wait_seconds from /metrics)</text>
+  <text x="368" y="792" class="b">• pre-warmed on GST filing days (11th, 20th,</text>
+  <text x="368" y="810" class="b">  month-end); warm pool of 4 stopped instances</text>
+  <text x="368" y="830" class="b">• use the base box's Redis and S3; spot loss is</text>
+  <text x="368" y="848" class="b">  safe, BullMQ re-delivers the jobs</text>
+  <text x="368" y="874" class="s">Sized for the brief's 2–3 s / 400 MB per PDF.</text>
+
+  <!-- ===================== PDF service group -->
+  <rect x="770" y="130" width="520" height="800" rx="8" class="grp"/>
+  <text x="786" y="918" class="g">PDF service base: one EC2 c7i.large (2 vCPU, 4 GB), always on</text>
+
+  <rect x="800" y="150" width="460" height="170" rx="6" class="box"/>
+  <text x="816" y="178" class="t">API (Node.js, Fastify)</text>
+  <text x="816" y="198" class="s">never runs Chromium</text>
+  <text x="816" y="224" class="b">• auth (API key / signed links), schema + totals reconciliation</text>
+  <text x="816" y="244" class="b">• admission control: estimated wait &gt; 4 s → 429 + Retry-After</text>
+  <text x="816" y="264" class="b">• long-poll waits (cheap async), SSE progress</text>
+  <text x="816" y="284" class="b">• downloads with Range / If-Range, or 302 to S3</text>
+  <text x="816" y="304" class="b">• public /verify, /metrics, /healthz</text>
+
+  <rect x="800" y="360" width="460" height="150" rx="6" class="box"/>
+  <text x="816" y="388" class="t">Redis (dedicated)</text>
+  <text x="816" y="408" class="s">noeviction, AOF every second, ~3 MB in use at peak</text>
+  <rect x="816" y="424" width="128" height="26" rx="13" class="chip"/><text x="830" y="442" class="chipt">pdf-interactive</text>
+  <rect x="952" y="424" width="88" height="26" rx="13" class="chip"/><text x="968" y="442" class="chipt">pdf-bulk</text>
+  <rect x="1048" y="424" width="82" height="26" rx="13" class="chip"/><text x="1064" y="442" class="chipt">pdf-zip</text>
+  <rect x="1138" y="424" width="108" height="26" rx="13" class="chip"/><text x="1152" y="442" class="chipt">pub/sub events</text>
+  <text x="816" y="476" class="b">• job id = content hash: identical requests coalesce</text>
+  <text x="816" y="496" class="b">• doc records + rate counters (30-day cache)</text>
+
+  <rect x="800" y="550" width="460" height="345" rx="6" class="box"/>
+  <text x="816" y="578" class="t">Worker (Node.js + Puppeteer)</text>
+  <text x="816" y="598" class="s">separate process: a Chromium crash cannot take the API down</text>
+  <rect x="816" y="612" width="428" height="96" rx="5" fill="#e4e4f6" stroke="#4b4db0"/>
+  <text x="830" y="636" class="b" font-weight="600">chrome-headless-shell, one warm browser</text>
+  <rect x="830" y="648" width="54" height="44" rx="3" fill="#fcfdfd" stroke="#4b4db0"/><text x="842" y="675" class="chipt">slot</text>
+  <rect x="892" y="648" width="54" height="44" rx="3" fill="#fcfdfd" stroke="#4b4db0"/><text x="904" y="675" class="chipt">slot</text>
+  <text x="960" y="664" class="s">2 render slots (= vCPUs); bulk may use 1,</text>
+  <text x="960" y="682" class="s">the other is always free for single PDFs</text>
+  <text x="816" y="732" class="b">• heavy lane: &gt; 300 lines → 250-row chunks, fresh page each,</text>
+  <text x="816" y="750" class="b">  merged with pdf-lib; one heavy doc at a time (memory flat ~105 MB)</text>
+  <text x="816" y="772" class="b">• crash → relaunch; retry with chunks halved each attempt</text>
+  <text x="816" y="792" class="b">• recycle Chromium at 500 renders or 1.2 GB</text>
+  <text x="816" y="814" class="b">• SHA-256 of the file + Ed25519-signed record</text>
+  <text x="816" y="836" class="b">• zip builder: parts ≤ 25 MB, MANIFEST.json, SHA256SUMS</text>
+  <text x="816" y="858" class="b">• renders only from persisted snapshot payloads</text>
+  <text x="816" y="880" class="b">• network blocked, JavaScript off in rendered pages</text>
+
+  <!-- ===================== AWS managed (outside VPC) -->
+  <rect x="1360" y="150" width="300" height="360" rx="6" class="box"/>
+  <text x="1376" y="178" class="t">S3 bucket</text>
+  <text x="1376" y="198" class="s">Object Lock enabled, versioned</text>
+  <text x="1376" y="228" class="b" font-weight="600">archive/</text>
+  <text x="1376" y="248" class="b">PDF + signed record per document</text>
+  <text x="1376" y="266" class="b">COMPLIANCE lock, 8 years</text>
+  <text x="1376" y="284" class="b">→ Glacier Instant Retrieval at 90 d</text>
+  <text x="1376" y="316" class="b" font-weight="600">index/sha256/</text>
+  <text x="1376" y="336" class="b">fingerprint → signed record</text>
+  <text x="1376" y="368" class="b" font-weight="600">bulk/</text>
+  <text x="1376" y="388" class="b">snapshot payloads + zip parts</text>
+  <text x="1376" y="406" class="b">expire after 7 days</text>
+  <text x="1376" y="440" class="s">Downloads are 302 to short-lived</text>
+  <text x="1376" y="458" class="s">presigned URLs: S3 serves the bytes</text>
+  <text x="1376" y="476" class="s">and Range/resume natively.</text>
+
+  <rect x="1360" y="560" width="300" height="74" rx="6" class="box"/>
+  <text x="1376" y="588" class="t">SSM Parameter Store</text>
+  <text x="1376" y="610" class="s">signing key, API keys, HMAC secrets</text>
+
+  <rect x="1360" y="670" width="300" height="74" rx="6" class="box"/>
+  <text x="1376" y="698" class="t">CloudWatch</text>
+  <text x="1376" y="720" class="s">logs, /metrics, alarms: queue wait, crashes</text>
+
+  <!-- ===================== flows -->
+  <!-- 1 user -> nginx -->
+  <path d="M280,175 L378,175" class="vio" marker-end="url(#a-vio)"/>
+  <circle cx="318" cy="175" r="11" fill="#4b4db0"/><text x="318" y="180" text-anchor="middle" font-size="12" font-weight="700" fill="#fff">1</text>
+  <!-- 2 django -> api -->
+  <path d="M700,285 L740,285 L740,215 L798,215" class="vio" marker-end="url(#a-vio)"/>
+  <circle cx="740" cy="250" r="11" fill="#4b4db0"/><text x="740" y="255" text-anchor="middle" font-size="12" font-weight="700" fill="#fff">2</text>
+  <!-- 3 api -> redis -->
+  <path d="M960,320 L960,358" class="vio" marker-end="url(#a-vio)"/>
+  <circle cx="960" cy="339" r="11" fill="#4b4db0"/><text x="960" y="344" text-anchor="middle" font-size="12" font-weight="700" fill="#fff">3</text>
+  <!-- 4 redirect back -->
+  <path d="M378,200 L282,200" class="vio" marker-end="url(#a-vio)"/>
+  <circle cx="330" cy="212" r="11" fill="#4b4db0"/><text x="330" y="217" text-anchor="middle" font-size="12" font-weight="700" fill="#fff">4</text>
+  <!-- 5 browser <-> API (through nginx /pdf/) -->
+  <path d="M160,120 L160,116 L1030,116 L1030,148" class="ink" marker-start="url(#a-ink)" marker-end="url(#a-ink)"/>
+  <circle cx="595" cy="116" r="11" fill="#1d2b3a"/><text x="595" y="121" text-anchor="middle" font-size="12" font-weight="700" fill="#fff">5</text>
+  <rect x="616" y="94" width="414" height="18" fill="#e4e8ec"/><text x="620" y="107" class="lbl" fill="#1d2b3a">browser ↔ PDF service via nginx /pdf/: download links, SSE, zip parts</text>
+  <!-- worker <-> redis -->
+  <path d="M1030,512 L1030,548" class="ink" marker-start="url(#a-ink)" marker-end="url(#a-ink)"/>
+  <text x="1042" y="535" class="s">consume jobs, publish progress</text>
+  <!-- 6 worker -> S3 -->
+  <path d="M1260,640 L1310,640 L1310,250 L1358,250" class="vio" marker-end="url(#a-vio)"/>
+  <circle cx="1310" cy="450" r="11" fill="#4b4db0"/><text x="1310" y="455" text-anchor="middle" font-size="12" font-weight="700" fill="#fff">6</text>
+  <!-- B1 django <-> RDS -->
+  <path d="M520,390 L520,438" class="teal" marker-start="url(#a-teal)" marker-end="url(#a-teal)"/>
+  <rect x="533" y="402" width="30" height="22" rx="11" fill="#0f766e"/><text x="548" y="418" text-anchor="middle" font-size="12" font-weight="700" fill="#fff">B1</text>
+  <!-- B2 django -> api (bulk) -->
+  <path d="M700,330 L752,330 L752,240 L798,240" class="teal" marker-end="url(#a-teal)"/>
+  <rect x="737" y="345" width="30" height="22" rx="11" fill="#0f766e"/><text x="752" y="361" text-anchor="middle" font-size="12" font-weight="700" fill="#fff">B2</text>
+  <!-- B3 api -> S3 bulk/ -->
+  <path d="M1260,190 L1330,190 L1330,375 L1358,375" class="teal" marker-end="url(#a-teal)"/>
+  <rect x="1315" y="200" width="30" height="22" rx="11" fill="#0f766e"/><text x="1330" y="216" text-anchor="middle" font-size="12" font-weight="700" fill="#fff">B3</text>
+  <!-- B4 webhook worker -> django -->
+  <path d="M800,860 L760,860 L760,400 L702,375" class="teal" marker-end="url(#a-teal)"/>
+  <rect x="745" y="700" width="30" height="22" rx="11" fill="#0f766e"/><text x="760" y="716" text-anchor="middle" font-size="12" font-weight="700" fill="#fff">B4</text>
+  <!-- V verify -->
+  <path d="M280,905 L300,905 L300,998 L780,998 L780,300 L798,300" class="red" marker-end="url(#a-grn)"/>
+  <rect x="440" y="987" width="24" height="22" rx="11" fill="#b4232c"/><text x="452" y="1003" text-anchor="middle" font-size="12" font-weight="700" fill="#fff">V</text>
+
+  <!-- ===================== legend -->
+  <rect x="40" y="1020" width="1620" height="165" rx="8" fill="#fcfdfd" stroke="#c9d1d8"/>
+  <text x="60" y="1048" font-size="15" font-weight="700" fill="#4b4db0">Single document (budget: download starts within 5 s)</text>
+  <text x="60" y="1070" class="b">1  User clicks "Download PDF" in the ERP.</text>
+  <text x="60" y="1089" class="b">2  Django builds the payload and POSTs it (wait=0). Same data → same content key → cached PDF returned.</text>
+  <text x="60" y="1108" class="b">3  API admits it (or 429) and enqueues on the interactive lane.</text>
+  <text x="60" y="1127" class="b">4  Django immediately answers the browser with a 302 to a signed link.</text>
+  <text x="60" y="1146" class="b">5  Browser follows it; the API holds the request until the PDF is ready (measured p99 0.66 s at peak).</text>
+  <text x="60" y="1165" class="b">6  Worker renders, fingerprints, signs, archives to S3; the waiting request streams it / redirects to S3.</text>
+
+  <text x="890" y="1048" font-size="15" font-weight="700" fill="#0f766e">Bulk (≤ 100 documents)</text>
+  <text x="890" y="1070" class="b">B1  Django reads all documents in one REPEATABLE READ transaction: one consistent snapshot.</text>
+  <text x="890" y="1089" class="b">B2  POST /v1/bulk with the snapshot payloads and snapshot_at; 202 + SSE and status URLs.</text>
+  <text x="890" y="1108" class="b">B3  API persists every payload before acking. Workers render only from these, never the live DB.</text>
+  <text x="890" y="1127" class="b">B4  When all are done: zip parts + manifest in S3, HMAC-signed webhook to Django.</text>
+  <text x="890" y="1146" class="b">5   Browser shows live progress (SSE) and downloads parts with resume (Range).</text>
+  <text x="890" y="1165" class="b" fill="#b4232c">V   Anyone can upload a PDF to /verify: fingerprint → signed record → authentic or altered.</text>
+</svg>

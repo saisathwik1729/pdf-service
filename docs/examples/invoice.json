@@ -1,0 +1,110 @@
+{
+  "type": "invoice",
+  "document_id": "inv_3",
+  "version": "2026-10-16T05:12:00Z",
+  "data": {
+    "number": "NIS/26-27/01003",
+    "date": "2026-10-16",
+    "due_date": "2026-11-15",
+    "po_reference": "PO-4403",
+    "place_of_supply": "Madhya Pradesh (23)",
+    "supply_type": "intra",
+    "reverse_charge": false,
+    "payment_terms": "Net 30",
+    "seller": {
+      "name": "Narmada Industrial Supplies Pvt Ltd",
+      "address": "Plot 42, Sector F, Sanwer Road Industrial Area\nIndore, Madhya Pradesh 452015",
+      "gstin": "23AABCN1234F1Z5",
+      "state": "Madhya Pradesh",
+      "state_code": "23",
+      "phone": "+91 731 400 1234",
+      "email": "accounts@narmadasupplies.example"
+    },
+    "buyer": {
+      "name": "Shree Ganesh Engineering Works",
+      "address": "17 Pologround Industrial Estate\nIndore, MP 452015",
+      "gstin": "23AAKFS9876M1Z2",
+      "state": "Madhya Pradesh",
+      "state_code": "23"
+    },
+    "items": [
+      {
+        "description": "Hydraulic Hose 1/2\" (per m)",
+        "item_code": "SKU-4009-0001",
+        "hsn": "4009",
+        "qty": 66,
+        "unit": "m",
+        "rate": 346.71,
+        "discount_pct": 0,
+        "taxable_value": 22882.86,
+        "tax_rate": 18,
+        "cgst": 2059.46,
+        "sgst": 2059.45,
+        "igst": 0,
+        "total": 27001.77
+      },
+      {
+        "description": "Cutting Oil 20L",
+        "item_code": "SKU-2710-0002",
+        "hsn": "2710",
+        "qty": 104,
+        "unit": "can",
+        "rate": 3336.51,
+        "discount_pct": 0,
+        "taxable_value": 346997.04,
+        "tax_rate": 18,
+        "cgst": 31229.74,
+        "sgst": 31229.73,
+        "igst": 0,
+        "total": 409456.51
+      },
+      {
+        "description": "MS Hex Bolt M12 x 60",
+        "item_code": "SKU-7318-0003",
+        "hsn": "7318",
+        "qty": 90,
+        "unit": "pcs",
+        "rate": 16.91,
+        "discount_pct": 0,
+        "taxable_value": 1521.9,
+        "tax_rate": 18,
+        "cgst": 136.97,
+        "sgst": 136.97,
+        "igst": 0,
+        "total": 1795.84
+      },
+      {
+        "description": "Welding Electrode E6013",
+        "item_code": "SKU-8311-0004",
+        "hsn": "8311",
+        "qty": 89,
+        "unit": "kg",
+        "rate": 225.32,
+        "discount_pct": 0,
+        "taxable_value": 20053.48,
+        "tax_rate": 18,
+        "cgst": 1804.82,
+        "sgst": 1804.81,
+        "igst": 0,
+        "total": 23663.11
+      }
+    ],
+    "totals": {
+      "taxable": 391455.28,
+      "cgst": 35230.99,
+      "sgst": 35230.96,
+      "igst": 0,
+      "round_off": -0.23,
+      "grand_total": 461917
+    },
+    "bank": {
+      "name": "State Bank of India",
+      "account_name": "Narmada Industrial Supplies Pvt Ltd",
+      "account_no": "XXXXXXXX4521",
+      "ifsc": "SBIN0001234",
+      "branch": "Palasia, Indore"
+    },
+    "notes": "Goods once sold will be accepted back only if defective, within 7 days of delivery.",
+    "terms": "1. Interest @18% p.a. charged on payments delayed beyond the due date.\n2. Subject to Indore jurisdiction."
+  }
+}

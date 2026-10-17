@@ -1,0 +1,181 @@
+{
+  "browser": {
+    "executablePath": "/opt/pw-browsers/chromium_headless_shell-1194/chrome-linux/headless_shell",
+    "headless": "shell"
+  },
+  "machine": {
+    "cpus": 2,
+    "model": "Intel(R) Xeon(R) Processor @ 2.10GHz",
+    "memGb": 8
+  },
+  "at": "2026-10-16T11:19:22.555Z",
+  "cold": {
+    "n": 5,
+    "p50": 252,
+    "p95": 374,
+    "peakRssMb": 177
+  },
+  "warm": [
+    {
+      "rows": 5,
+      "chunkRows": 5,
+      "ms": 147,
+      "pages": 1,
+      "kb": 87,
+      "idleRssMb": 115,
+      "peakRssMb": 168,
+      "deltaMb": 53,
+      "error": null
+    },
+    {
+      "rows": 50,
+      "chunkRows": 50,
+      "ms": 190,
+      "pages": 3,
+      "kb": 99,
+      "idleRssMb": 108,
+      "peakRssMb": 181,
+      "deltaMb": 73,
+      "error": null
+    },
+    {
+      "rows": 200,
+      "chunkRows": 200,
+      "ms": 251,
+      "pages": 9,
+      "kb": 136,
+      "idleRssMb": 115,
+      "peakRssMb": 211,
+      "deltaMb": 96,
+      "error": null
+    },
+    {
+      "rows": 500,
+      "chunkRows": 500,
+      "ms": 508,
+      "pages": 20,
+      "kb": 211,
+      "idleRssMb": 143,
+      "peakRssMb": 274,
+      "deltaMb": 131,
+      "error": null
+    },
+    {
+      "rows": 1000,
+      "chunkRows": 1000,
+      "ms": 893,
+      "pages": 40,
+      "kb": 338,
+      "idleRssMb": 124,
+      "peakRssMb": 390,
+      "deltaMb": 266,
+      "error": null
+    },
+    {
+      "rows": 2000,
+      "chunkRows": 2000,
+      "ms": 1944,
+      "pages": 78,
+      "kb": 588,
+      "idleRssMb": 111,
+      "peakRssMb": 655,
+      "deltaMb": 544,
+      "error": null
+    },
+    {
+      "rows": 4000,
+      "chunkRows": 4000,
+      "ms": 7574,
+      "pages": 155,
+      "kb": 1093,
+      "idleRssMb": 108,
+      "peakRssMb": 1335,
+      "deltaMb": 1227,
+      "error": null
+    }
+  ],
+  "chunked": [
+    {
+      "rows": 500,
+      "chunkRows": 250,
+      "ms": 612,
+      "pages": 20,
+      "kb": 221,
+      "idleRssMb": 115,
+      "peakRssMb": 219,
+      "deltaMb": 104,
+      "error": null
+    },
+    {
+      "rows": 1000,
+      "chunkRows": 250,
+      "ms": 1098,
+      "pages": 40,
+      "kb": 386,
+      "idleRssMb": 116,
+      "peakRssMb": 221,
+      "deltaMb": 105,
+      "error": null
+    },
+    {
+      "rows": 2000,
+      "chunkRows": 250,
+      "ms": 1981,
+      "pages": 80,
+      "kb": 710,
+      "idleRssMb": 121,
+      "peakRssMb": 220,
+      "deltaMb": 99,
+      "error": null
+    },
+    {
+      "rows": 4000,
+      "chunkRows": 250,
+      "ms": 4637,
+      "pages": 160,
+      "kb": 1365,
+      "idleRssMb": 106,
+      "peakRssMb": 221,
+      "deltaMb": 115,
+      "error": null
+    }
+  ],
+  "throughput": [
+    {
+      "concurrency": 1,
+      "renders": 60,
+      "pdfPerSec": 19.93,
+      "pdfPerMin": 1196,
+      "p50": 48,
+      "p95": 77,
+      "peakRssMb": 361
+    },
+    {
+      "concurrency": 2,
+      "renders": 60,
+      "pdfPerSec": 30.36,
+      "pdfPerMin": 1822,
+      "p50": 58,
+      "p95": 101,
+      "peakRssMb": 418
+    },
+    {
+      "concurrency": 3,
+      "renders": 60,
+      "pdfPerSec": 32.03,
+      "pdfPerMin": 1922,
+      "p50": 88,
+      "p95": 189,
+      "peakRssMb": 437
+    },
+    {
+      "concurrency": 4,
+      "renders": 60,
+      "pdfPerSec": 33.16,
+      "pdfPerMin": 1990,
+      "p50": 105,
+      "p95": 248,
+      "peakRssMb": 456
+    }
+  ]
+}
