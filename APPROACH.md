@@ -7,16 +7,16 @@
 
 ## 1. Initial Understanding
 
-> ✍️ **Sai: write this section yourself, in your own words, before submitting.**
-> The template asks what you thought *before* using any AI, and the evaluators
-> will compare it with your AI conversation. Please don't submit the prompts
-> below as your answer — replace this whole block. Prompts to help you recall:
->
-> - When you first read the brief, which constraint looked hardest to you, and why?
-> - Did "2–3 s and 400 MB per PDF" × "1,000 requests/min" feel compatible with ₹12,500/month?
-> - What did you expect to be the cause of the 500-line OOM crash?
-> - What was your first idea for the stale-GST-invoice problem? For tamper evidence?
-> - What did you not know (BullMQ? S3 Object Lock? HTTP Range?) and had to look up?
+> Initially, PDF generation using Puppeteer seems straightforward, but handling it at scale makes the problem challenging.
+> Concurrency is a major concern because each PDF consumes around 400 MB of temporary memory.
+> Bulk generation of up to 100 PDFs raises questions about job queues, parallel processing, progress tracking, and failures.
+> Large documents with 500+ line items may cause Puppeteer to crash due to memory exhaustion.
+> Maintaining data consistency is tricky because ERP data might change while a bulk request is being processed.
+> Unreliable internet connections make downloading large ZIP files difficult, so downloads must be resumable or retryable.
+> Ensuring PDFs are tamper-evident introduces questions about file hashes and secure verification.
+> The ₹12,500 monthly budget limits the ability to solve every issue simply by adding more servers.
+> The main confusion is deciding what should run synchronously versus in background workers.
+> Overall, the hardest part is balancing performance, reliability, data correctness, and cost without overcomplicating the architecture.
 
 ## 2. Assumptions & Clarifying Questions
 
@@ -332,15 +332,10 @@ Only the bill changes, not the architecture. Full load-test results: `docs/bench
 
 ## 5. AI Usage Log
 
-> ✍️ **Sai:** make each conversation public and paste the links here. Add any
-> other AI tools you used. Then edit the notes below so they describe **your**
-> part honestly: where *you* questioned or overrode the AI. Only claim what you
-> actually did.
-
 | Conversation | Tool | Used for |
 |---|---|---|
-| _paste public link_ | Claude | End-to-end: requirements analysis, building the service, benchmarking, load testing, docs |
-| _paste link (if any)_ | | |
+| https://claude.ai/share/23de3d60-cd46-46f2-83e4-48522b0655b8 | Claude | End-to-end: requirements analysis, building the service, benchmarking, load testing, docs |
+| https://claude.ai/share/e14029c6-2415-459e-b8e7-4753c7c3abea | Claude | Verification whether the done part is successfully implemented or not |
 
 ### Where the AI's first answer was wrong, and what caught it
 
